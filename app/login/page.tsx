@@ -32,12 +32,12 @@ export default function LoginPage() {
         <input
           type="email" required placeholder="Email" value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border border-pink-100 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400"
+          className="border border-pink-100 bg-white/[0.04] text-white placeholder-gray-500 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400"
         />
         <input
           type="password" required placeholder="Password" value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border border-pink-100 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400"
+          className="border border-pink-100 bg-white/[0.04] text-white placeholder-gray-500 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400"
         />
         {error && <p className="text-xs text-coral-800 bg-coral-50 rounded-lg px-3 py-2">{error}</p>}
         <button

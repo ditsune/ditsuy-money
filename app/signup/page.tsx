@@ -25,7 +25,7 @@ export default function SignupPage() {
     return (
       <div className="px-6 pt-20 text-center">
         <p className="hand text-4xl text-pink-600 mb-4">Ditsuy</p>
-        <p className="text-sm text-gray-600">
+        <p className="text-sm text-gray-300">
           Akun berhasil dibuat. Cek email <b>{email}</b> buat konfirmasi, lalu{' '}
           <Link href="/login" className="text-pink-600 font-medium">masuk di sini</Link>.
         </p>
@@ -42,12 +42,12 @@ export default function SignupPage() {
         <input
           type="email" required placeholder="Email" value={email}
           onChange={(e) => setEmail(e.target.value)}
-          className="border border-pink-100 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400"
+          className="border border-pink-100 bg-white/[0.04] text-white placeholder-gray-500 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400"
         />
         <input
           type="password" required minLength={6} placeholder="Password (min 6 karakter)" value={password}
           onChange={(e) => setPassword(e.target.value)}
-          className="border border-pink-100 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400"
+          className="border border-pink-100 bg-white/[0.04] text-white placeholder-gray-500 rounded-xl px-4 py-3 text-sm outline-none focus:border-pink-400"
         />
         {error && <p className="text-xs text-coral-800 bg-coral-50 rounded-lg px-3 py-2">{error}</p>}
         <button
