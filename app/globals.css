@@ -3,22 +3,23 @@
 @tailwind utilities;
 
 html, body {
-  background: #FFF7F9;
-  color: #2C2C2A;
+  background: #0b0e14;
+  background-image: radial-gradient(circle at 20% 20%, #14222e 0%, #0b0e14 85%);
+  color: #eef2f8;
 }
 
 .hand { font-family: var(--font-caveat), cursive; }
 
 .row-item {
   display: flex; align-items: center; gap: 12px; padding: 11px 0;
-  border-bottom: 1px dashed #F0DCE3;
+  border-bottom: 1px dashed rgba(255, 255, 255, 0.08);
 }
 .row-item:last-child { border-bottom: none; }
 
 .progress-fill-stripe {
-  background: repeating-linear-gradient(135deg, #D4537E, #D4537E 4px, #ED93B1 4px, #ED93B1 8px);
+  background: repeating-linear-gradient(135deg, #6aa9ff, #6aa9ff 4px, #1e3a5c 4px, #1e3a5c 8px);
 }
 
 input[type="date"]::-webkit-calendar-picker-indicator {
-  filter: invert(0.4) sepia(1) saturate(3) hue-rotate(300deg);
+  filter: invert(1);
 }

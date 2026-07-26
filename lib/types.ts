@@ -13,7 +13,6 @@ export type Account = {
   ramp: string;
   type: 'cash' | 'savings' | 'debt';
   goal: number;
-  opening_balance: number;
   balance: number;
 };
 
@@ -27,21 +26,29 @@ export type Transaction = {
   note: string;
 };
 
-// Hex-based colors — used everywhere instead of Tailwind dynamic classes,
-// so icon backgrounds never depend on Tailwind's content-scanning/purge.
+export const RAMP: Record<string, [string, string]> = {
+  pink: ['bg-pink-50', 'text-pink-400'],
+  coral: ['bg-coral-50', 'text-coral-400'],
+  green: ['bg-green-50', 'text-green-400'],
+  blue: ['bg-blue-50', 'text-blue-400'],
+  amber: ['bg-amber-50', 'text-amber-400'],
+  purple: ['bg-purple-50', 'text-purple-400'],
+  teal: ['bg-teal-50', 'text-teal-400'],
+};
+
+// Hex-based colors — dark-theme glass style: translucent tinted background + bright saturated icon color.
 export const RAMP_HEX: Record<string, { bg: string; fg: string }> = {
-  pink:   { bg: '#FBEAF0', fg: '#72243E' },
-  coral:  { bg: '#FAECE7', fg: '#712B13' },
-  green:  { bg: '#EAF3DE', fg: '#27500A' },
-  blue:   { bg: '#E6F1FB', fg: '#0C447C' },
-  amber:  { bg: '#FAEEDA', fg: '#633806' },
-  purple: { bg: '#EEEDFE', fg: '#3C3489' },
-  teal:   { bg: '#E1F5EE', fg: '#085041' },
+  pink:   { bg: 'rgba(255, 138, 196, 0.12)', fg: '#ff8ac4' },
+  coral:  { bg: 'rgba(255, 138, 101, 0.12)', fg: '#ff8a65' },
+  green:  { bg: 'rgba(81, 207, 102, 0.12)',  fg: '#51cf66' },
+  blue:   { bg: 'rgba(106, 169, 255, 0.12)', fg: '#6aa9ff' },
+  amber:  { bg: 'rgba(255, 169, 77, 0.12)',  fg: '#ffa94d' },
+  purple: { bg: 'rgba(151, 117, 250, 0.12)', fg: '#9775fa' },
+  teal:   { bg: 'rgba(56, 217, 169, 0.12)',  fg: '#38d9a9' },
 };
 
 export function fmt(n: number): string {
-  const sign = n < 0 ? '-' : '';
-  return sign + 'Rp' + Math.round(Math.abs(n)).toLocaleString('id-ID');
+  return 'Rp' + Math.round(Math.abs(n)).toLocaleString('id-ID');
 }
 
 export const MONTHS = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];

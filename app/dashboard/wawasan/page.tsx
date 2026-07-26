@@ -32,7 +32,7 @@ export default function WawasanPage() {
         <button
           onClick={() => setTab('exp')}
           className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full border text-xs font-medium ${
-            tab === 'exp' ? 'bg-coral-50 border-coral-400 text-coral-800' : 'bg-white border-pink-100 text-gray-400'
+            tab === 'exp' ? 'bg-coral-50 border-coral-400 text-coral-800' : 'bg-white/[0.04] border-pink-100 text-gray-400'
           }`}
         >
           <i className="ti ti-shopping-cart" /> Pengeluaran
@@ -40,7 +40,7 @@ export default function WawasanPage() {
         <button
           onClick={() => setTab('inc')}
           className={`flex-1 flex items-center justify-center gap-1.5 py-2.5 rounded-full border text-xs font-medium ${
-            tab === 'inc' ? 'bg-green-50 border-green-400 text-green-800' : 'bg-white border-pink-100 text-gray-400'
+            tab === 'inc' ? 'bg-green-50 border-green-400 text-green-800' : 'bg-white/[0.04] border-pink-100 text-gray-400'
           }`}
         >
           <i className="ti ti-cash" /> Penghasilan
@@ -62,7 +62,7 @@ export default function WawasanPage() {
                 transform={`rotate(${rotate} 90 90)`}
               />
             );
-          }) : <circle cx="90" cy="90" r="70" fill="none" stroke="#F0DCE3" strokeWidth="22" />}
+          }) : <circle cx="90" cy="90" r="70" fill="none" stroke="#2a3444" strokeWidth="22" />}
         </svg>
       </div>
 

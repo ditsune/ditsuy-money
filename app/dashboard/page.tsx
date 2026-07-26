@@ -1,47 +1,33 @@
 'use client';
-import { useMemo, useCallback } from 'react';
 import { useDashboard } from '@/components/DashboardShell';
 import { RAMP_HEX, fmt } from '@/lib/types';
 
 export default function BerandaPage() {
   const { categories, accounts, transactions, loading, openEdit } = useDashboard();
 
-  // Summary dihitung langsung dari transaksi yang udah kefetch untuk bulan
-  // yang lagi aktif (lihat DashboardShell + lib/date.ts) — gak perlu query
-  // terpisah ke server lagi, jadi satu-satunya sumber kebenaran.
-  // Dibungkus useMemo biar gak keitung ulang tiap render (misal pas sheet
-  // transaksi lagi kebuka dan user ngetik).
-  const { incomes, expenses, inc, exp, saldo, total } = useMemo(() => {
-    const incomes = transactions.filter((t) => t.type === 'inc');
-    const expenses = transactions.filter((t) => t.type === 'exp');
-    const inc = incomes.reduce((sum, t) => sum + t.amount, 0);
-    const exp = expenses.reduce((sum, t) => sum + t.amount, 0);
-    return { incomes, expenses, inc, exp, saldo: inc - exp, total: transactions.length };
-  }, [transactions]);
+  const inc = transactions.filter((t) => t.type === 'inc').reduce((s, t) => s + t.amount, 0);
+  const exp = transactions.filter((t) => t.type === 'exp').reduce((s, t) => s + t.amount, 0);
+  const saldo = inc - exp;
+  const incomes = transactions.filter((t) => t.type === 'inc');
+  const expenses = transactions.filter((t) => t.type === 'exp');
 
-  const catOf = useCallback(
-    (id: string) => categories.find((c) => c.id === id) || { name: id, icon: 'ti-dots', ramp: 'pink' },
-    [categories]
-  );
-  const accOf = useCallback(
-    (id: string) => accounts.find((a) => a.id === id)?.name || '',
-    [accounts]
-  );
+  function catOf(id: string) { return categories.find((c) => c.id === id) || { name: id, icon: 'ti-dots', ramp: 'pink' }; }
+  function accOf(id: string) { return accounts.find((a) => a.id === id)?.name || ''; }
 
   if (loading) return <p className="px-[18px] py-10 text-center text-sm text-gray-400">Memuat...</p>;
 
   return (
     <>
       <div className="flex gap-2.5 px-[18px] mb-3.5">
-        <div className="flex-1 bg-white rounded-2xl px-3 py-2.5 border border-pink-100">
-          <p className="text-[10px] uppercase text-gray-400 mb-1">Saldo Bulan Ini</p>
+        <div className="flex-1 bg-white/[0.04] rounded-2xl px-3 py-2.5 border border-pink-100">
+          <p className="text-[10px] uppercase text-gray-400 mb-1">Saldo</p>
           <p className="text-[13px] font-semibold text-pink-600">{fmt(saldo)}</p>
         </div>
-        <div className="flex-1 bg-white rounded-2xl px-3 py-2.5 border border-pink-100">
+        <div className="flex-1 bg-white/[0.04] rounded-2xl px-3 py-2.5 border border-pink-100">
           <p className="text-[10px] uppercase text-gray-400 mb-1">Penghasilan</p>
           <p className="text-[13px] font-semibold text-green-800">{fmt(inc)}</p>
         </div>
-        <div className="flex-1 bg-white rounded-2xl px-3 py-2.5 border border-pink-100">
+        <div className="flex-1 bg-white/[0.04] rounded-2xl px-3 py-2.5 border border-pink-100">
           <p className="text-[10px] uppercase text-gray-400 mb-1">Pengeluaran</p>
           <p className="text-[13px] font-semibold text-coral-800">{fmt(exp)}</p>
         </div>
@@ -49,7 +35,7 @@ export default function BerandaPage() {
 
       <div className="px-[18px] mb-5 text-center">
         <p className="text-xs text-gray-400">
-          {total ? `${total} transaksi bulan ini` : 'Belum ada transaksi bulan ini'}
+          {transactions.length ? `${transactions.length} transaksi bulan ini` : 'Belum ada transaksi bulan ini'}
         </p>
       </div>
 

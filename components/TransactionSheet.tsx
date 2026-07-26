@@ -112,7 +112,7 @@ export default function TransactionSheet({
               className={`flex items-center gap-1.5 px-3.5 py-2 rounded-full border text-xs ${
                 draft.type === t
                   ? t === 'exp' ? 'bg-coral-50 border-coral-400 text-coral-800' : 'bg-green-50 border-green-400 text-green-800'
-                  : 'bg-white border-pink-100 text-gray-400'
+                  : 'bg-white/[0.04] border-pink-100 text-gray-400'
               }`}
             >
               <i className={`ti ${t === 'exp' ? 'ti-shopping-cart' : 'ti-cash'}`} />
@@ -134,18 +134,18 @@ export default function TransactionSheet({
           />
         </div>
 
-        <div className="mx-[18px] bg-white rounded-2xl border border-pink-100">
+        <div className="mx-[18px] bg-white/[0.04] rounded-2xl border border-pink-100">
           <div
             className="flex items-center justify-between px-4 py-3.5 border-b border-pink-100 text-sm cursor-pointer"
             onClick={() => setShowCatPicker(!showCatPicker)}
           >
-            <span className="text-gray-600">Kategori</span>
-            <span className={selectedCat ? 'text-gray-900 font-medium' : 'text-gray-400'}>
+            <span className="text-gray-300">Kategori</span>
+            <span className={selectedCat ? 'text-white font-medium' : 'text-gray-400'}>
               {selectedCat ? selectedCat.name : 'Pilih'} <i className="ti ti-chevron-right ml-1" />
             </span>
           </div>
           <div className="flex items-center justify-between px-4 py-3.5 border-b border-pink-100 text-sm">
-            <span className="text-gray-600">Tanggal</span>
+            <span className="text-gray-300">Tanggal</span>
             <input
               type="date" value={draft.tx_date}
               onChange={(e) => setDraft({ ...draft, tx_date: e.target.value })}
@@ -153,7 +153,7 @@ export default function TransactionSheet({
             />
           </div>
           <div className="flex items-center justify-between px-4 py-3.5 border-b border-pink-100 text-sm">
-            <span className="text-gray-600">Akun</span>
+            <span className="text-gray-300">Akun</span>
             <select
               value={draft.account_id}
               onChange={(e) => setDraft({ ...draft, account_id: e.target.value })}
@@ -163,7 +163,7 @@ export default function TransactionSheet({
             </select>
           </div>
           <div className="flex items-center justify-between px-4 py-3.5 text-sm">
-            <span className="text-gray-600">Catatan</span>
+            <span className="text-gray-300">Catatan</span>
             <input
               type="text" placeholder="Opsional" value={draft.note}
               onChange={(e) => setDraft({ ...draft, note: e.target.value })}
@@ -181,7 +181,7 @@ export default function TransactionSheet({
               <input
                 placeholder="Cari kategori" value={catSearch}
                 onChange={(e) => setCatSearch(e.target.value)}
-                className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-pink-100 bg-white text-sm outline-none"
+                className="w-full pl-9 pr-3.5 py-2.5 rounded-xl border border-pink-100 bg-white/[0.04] text-sm outline-none"
               />
             </div>
             <div className="grid grid-cols-3 gap-2.5 px-[18px]">
@@ -191,7 +191,7 @@ export default function TransactionSheet({
                   <div
                     key={c.id}
                     onClick={() => { setDraft({ ...draft, category_id: c.id }); setShowCatPicker(false); }}
-                    className="flex flex-col items-center gap-1.5 bg-white border border-pink-100 rounded-2xl py-3.5 px-1.5 cursor-pointer"
+                    className="flex flex-col items-center gap-1.5 bg-white/[0.04] border border-pink-100 rounded-2xl py-3.5 px-1.5 cursor-pointer"
                   >
                     <div
                       className="w-9 h-9 rounded-xl flex items-center justify-center"
@@ -199,7 +199,7 @@ export default function TransactionSheet({
                     >
                       <i className={`ti ${c.icon}`} />
                     </div>
-                    <span className="text-[11px] text-gray-600 text-center">{c.name}</span>
+                    <span className="text-[11px] text-gray-300 text-center">{c.name}</span>
                   </div>
                 );
               })}

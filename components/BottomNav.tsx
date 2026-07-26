@@ -13,14 +13,14 @@ export default function BottomNav({ onAdd }: { onAdd: () => void }) {
   const pathname = usePathname();
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-white border-t border-pink-100 flex justify-around items-center px-1.5 pt-2.5 pb-[calc(10px+env(safe-area-inset-bottom))] z-50">
+    <div className="fixed bottom-0 left-0 right-0 max-w-[480px] mx-auto bg-pink-50 border-t border-pink-100 flex justify-around items-center px-1.5 pt-2.5 pb-[calc(10px+env(safe-area-inset-bottom))] z-50">
       {ITEMS.map((item, i) => {
         const active = pathname === item.href;
         const el = (
           <Link
             key={item.href}
             href={item.href}
-            className={`flex flex-col items-center gap-0.5 text-[9px] px-2.5 ${active ? 'text-pink-600' : 'text-gray-400'}`}
+            className={`flex flex-col items-center gap-0.5 text-[9px] px-2.5 outline-none focus-visible:text-pink-400 ${active ? 'text-pink-600' : 'text-gray-400'}`}
           >
             <i className={`ti ${item.icon} text-xl`} />
             {item.label}
