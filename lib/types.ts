@@ -13,6 +13,7 @@ export type Account = {
   ramp: string;
   type: 'cash' | 'savings' | 'debt';
   goal: number;
+  opening_balance: number;
   balance: number;
 };
 
