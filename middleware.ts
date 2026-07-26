@@ -23,11 +23,36 @@ export async function middleware(request: NextRequest) {
     }
   );
 
-  const { data: { user } } = await supabase.auth.getUser();
+  const { data: { user }, error } = await supabase.auth.getUser();
 
   const isAuthRoute = request.nextUrl.pathname.startsWith('/login') ||
                       request.nextUrl.pathname.startsWith('/signup');
   const isDashboardRoute = request.nextUrl.pathname.startsWith('/dashboard');
+
+  // JWT error (issued at future, expired, invalid, dll) → paksa clear session
+  // dan redirect ke login supaya user bisa fresh login tanpa loop error.
+  const isJwtError =
+    error &&
+    (error.message?.toLowerCase().includes('jwt') ||
+      error.message?.toLowerCase().includes('token') ||
+      (error as any)?.status === 401);
+
+  if (isJwtError && isDashboardRoute) {
+    const loginUrl = new URL('/login', request.url);
+    const redirectResponse = NextResponse.redirect(loginUrl);
+
+    // Hapus semua cookie supabase yang corrupt
+    request.cookies.getAll().forEach((cookie) => {
+      if (cookie.name.startsWith('sb-') || cookie.name.includes('supabase')) {
+        redirectResponse.cookies.set(cookie.name, '', {
+          maxAge: 0,
+          path: '/',
+        });
+      }
+    });
+
+    return redirectResponse;
+  }
 
   if (!user && isDashboardRoute) {
     return NextResponse.redirect(new URL('/login', request.url));

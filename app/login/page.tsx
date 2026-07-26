@@ -16,9 +16,28 @@ export default function LoginPage() {
     e.preventDefault();
     setError('');
     setLoading(true);
+
+    // Paksa sign out dulu untuk membersihkan session/JWT lama yang mungkin corrupt.
+    // Ini penting supaya signInWithPassword tidak inherit state yang broken.
+    await supabase.auth.signOut();
+
     const { error } = await supabase.auth.signInWithPassword({ email, password });
     setLoading(false);
-    if (error) { setError(error.message); return; }
+
+    if (error) {
+      // Kalau JWT error masih muncul waktu login, clear cookie via API route
+      if (
+        error.message?.toLowerCase().includes('jwt') ||
+        error.message?.toLowerCase().includes('token')
+      ) {
+        await fetch('/api/auth/clear', { method: 'POST' });
+        setError('Session lama bermasalah — sudah dibersihkan. Coba login lagi.');
+      } else {
+        setError(error.message);
+      }
+      return;
+    }
+
     router.push('/dashboard');
     router.refresh();
   }

@@ -32,7 +32,7 @@ export default function BottomNav({ onAdd }: { onAdd: () => void }) {
               {el}
               <button
                 onClick={onAdd}
-                className="w-12 h-12 rounded-full bg-pink-400 flex items-center justify-center -mt-8 shadow-lg shadow-pink-300/50 border-4 border-bg text-white text-xl"
+                className="w-12 h-12 rounded-full bg-pink-400 flex items-center justify-center -mt-8 shadow-lg border-4 border-bg text-white text-xl"
               >
                 <i className="ti ti-plus" />
               </button>
