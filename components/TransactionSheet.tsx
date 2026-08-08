@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { Category, Account, Transaction } from '@/lib/types';
 import { RAMP_HEX, fmt } from '@/lib/types';
 import { createTransaction, updateTransaction, deleteTransaction } from '@/lib/queries';
+import CurrencyInput from './CurrencyInput';
 
 type Draft = {
   id?: string;
@@ -122,14 +123,11 @@ export default function TransactionSheet({
         </div>
 
         <div className="text-center px-[18px] pb-6">
-          <input
-            inputMode="numeric"
+          <CurrencyInput
+            value={draft.amount}
+            onChange={(v) => setDraft({ ...draft, amount: v })}
             placeholder="Rp0,00"
-            value={draft.amount ? draft.amount.toLocaleString('id-ID') : ''}
-            onChange={(e) => {
-              const raw = e.target.value.replace(/[^\d]/g, '');
-              setDraft({ ...draft, amount: parseInt(raw || '0', 10) });
-            }}
+            autoFocus
             className="bg-transparent text-center text-4xl font-semibold w-full outline-none"
           />
         </div>
