@@ -24,12 +24,14 @@ export default function TransaksiPage() {
     const dayNet = byDay[d].reduce((s, t) => s + (t.type === 'inc' ? t.amount : -t.amount), 0);
     return (
       <div key={d} className="px-[18px] mb-1.5">
-        <div className="flex items-baseline justify-between gap-2.5 my-3.5">
+        <div className="flex items-center justify-between gap-2.5 mt-3.5 mb-2 pb-2 border-b border-white/[0.06]">
           <div className="flex items-baseline gap-2.5">
             <span className="text-[22px] font-semibold text-pink-400 w-[26px] text-center">{dt.getDate()}</span>
             <span className="hand text-2xl">{DAYNAMES[dt.getDay()]}</span>
           </div>
-          <span className={`text-[12px] font-semibold ${dayNet < 0 ? 'text-coral-800' : dayNet > 0 ? 'text-green-800' : 'text-gray-400'}`}>
+          <span className={`text-[11px] font-semibold px-2.5 py-1 rounded-full ${
+            dayNet < 0 ? 'bg-coral-50 text-coral-800' : dayNet > 0 ? 'bg-green-50 text-green-800' : 'bg-white/[0.04] text-gray-400'
+          }`}>
             {dayNet < 0 ? '-' : dayNet > 0 ? '+' : ''}{fmt(dayNet)}
           </span>
         </div>
