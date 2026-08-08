@@ -3,6 +3,7 @@ import { useState } from 'react';
 import type { Account } from '@/lib/types';
 import { RAMP_HEX } from '@/lib/types';
 import { IconRampPicker, PICKABLE_ICONS } from './IconRampPicker';
+import CurrencyInput from './CurrencyInput';
 import { createAccount, updateAccountOpeningBalance, deleteAccount } from '@/lib/queries';
 import { createClient } from '@/lib/supabase/client';
 
@@ -117,7 +118,6 @@ export default function AccountSheet({
         className="w-full max-w-[480px] bg-bg rounded-t-3xl max-h-[92vh] overflow-y-auto pb-10"
         onClick={(e) => e.stopPropagation()}
       >
-        {/* Header */}
         <div className="flex items-center justify-between px-[18px] py-4 sticky top-0 bg-bg">
           <i className="ti ti-x text-xl text-gray-400 cursor-pointer" onClick={onClose} />
           <span className="text-xs font-semibold tracking-wider text-gray-400 uppercase">
@@ -133,7 +133,6 @@ export default function AccountSheet({
         </div>
 
         <div className="px-[18px]">
-          {/* Preview icon */}
           <div className="flex justify-center mb-5">
             <div
               className="w-16 h-16 rounded-2xl flex items-center justify-center text-2xl"
@@ -143,7 +142,6 @@ export default function AccountSheet({
             </div>
           </div>
 
-          {/* Nama akun */}
           <div className="mb-4">
             <p className="text-[11px] text-gray-400 mb-1.5">Nama Akun</p>
             <input
@@ -156,7 +154,6 @@ export default function AccountSheet({
             />
           </div>
 
-          {/* Tipe akun */}
           <div className="mb-4">
             <p className="text-[11px] text-gray-400 mb-1.5">Tipe Akun</p>
             <div className="flex flex-col gap-2">
@@ -192,7 +189,6 @@ export default function AccountSheet({
             </div>
           </div>
 
-          {/* Icon & Warna */}
           <IconRampPicker
             icon={draft.icon}
             ramp={draft.ramp}
@@ -200,25 +196,18 @@ export default function AccountSheet({
             onRamp={(v) => setDraft({ ...draft, ramp: v })}
           />
 
-          {/* Saldo awal */}
           <div className="mb-4">
             <p className="text-[11px] text-gray-400 mb-1.5">Saldo Awal</p>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-gray-400">Rp</span>
-              <input
-                inputMode="numeric"
-                placeholder="0"
-                value={draft.opening_balance ? draft.opening_balance.toLocaleString('id-ID') : ''}
-                onChange={(e) => {
-                  const raw = e.target.value.replace(/[^\d]/g, '');
-                  setDraft({ ...draft, opening_balance: parseInt(raw || '0', 10) });
-                }}
+              <CurrencyInput
+                value={draft.opening_balance}
+                onChange={(v) => setDraft({ ...draft, opening_balance: v })}
                 className="w-full border border-pink-100 bg-white/[0.04] text-white placeholder-gray-500 rounded-xl pl-10 pr-4 py-3 text-sm outline-none focus:border-pink-400"
               />
             </div>
           </div>
 
-          {/* Target (hanya savings & debt) */}
           {draft.type !== 'cash' && (
             <div className="mb-4">
               <p className="text-[11px] text-gray-400 mb-1.5">
@@ -226,14 +215,9 @@ export default function AccountSheet({
               </p>
               <div className="relative">
                 <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-gray-400">Rp</span>
-                <input
-                  inputMode="numeric"
-                  placeholder="0"
-                  value={draft.goal ? draft.goal.toLocaleString('id-ID') : ''}
-                  onChange={(e) => {
-                    const raw = e.target.value.replace(/[^\d]/g, '');
-                    setDraft({ ...draft, goal: parseInt(raw || '0', 10) });
-                  }}
+                <CurrencyInput
+                  value={draft.goal}
+                  onChange={(v) => setDraft({ ...draft, goal: v })}
                   className="w-full border border-pink-100 bg-white/[0.04] text-white placeholder-gray-500 rounded-xl pl-10 pr-4 py-3 text-sm outline-none focus:border-pink-400"
                 />
               </div>
@@ -244,7 +228,6 @@ export default function AccountSheet({
             <p className="text-xs text-coral-800 bg-coral-50 rounded-lg px-3 py-2 mb-4">{error}</p>
           )}
 
-          {/* Hapus akun (edit mode only) */}
           {mode === 'edit' && (
             <button
               onClick={handleDelete}
