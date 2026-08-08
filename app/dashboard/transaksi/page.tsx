@@ -21,11 +21,17 @@ export default function TransaksiPage() {
     <p className="px-[18px] py-10 text-center text-sm text-gray-400">Belum ada transaksi bulan ini</p>
   ) : days.map((d) => {
     const dt = new Date(d + 'T00:00:00');
+    const dayNet = byDay[d].reduce((s, t) => s + (t.type === 'inc' ? t.amount : -t.amount), 0);
     return (
       <div key={d} className="px-[18px] mb-1.5">
-        <div className="flex items-baseline gap-2.5 my-3.5">
-          <span className="text-[22px] font-semibold text-pink-400 w-[26px] text-center">{dt.getDate()}</span>
-          <span className="hand text-2xl">{DAYNAMES[dt.getDay()]}</span>
+        <div className="flex items-baseline justify-between gap-2.5 my-3.5">
+          <div className="flex items-baseline gap-2.5">
+            <span className="text-[22px] font-semibold text-pink-400 w-[26px] text-center">{dt.getDate()}</span>
+            <span className="hand text-2xl">{DAYNAMES[dt.getDay()]}</span>
+          </div>
+          <span className={`text-[12px] font-semibold ${dayNet < 0 ? 'text-coral-800' : dayNet > 0 ? 'text-green-800' : 'text-gray-400'}`}>
+            {dayNet < 0 ? '-' : dayNet > 0 ? '+' : ''}{fmt(dayNet)}
+          </span>
         </div>
         {byDay[d].map((t) => {
           const c = catOf(t.category_id);
