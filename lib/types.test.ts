@@ -6,8 +6,8 @@ describe('fmt', () => {
     expect(fmt(15000)).toBe('Rp15.000');
   });
 
-  it('format angka negatif dengan tanda minus di depan', () => {
-    expect(fmt(-15000)).toBe('-Rp15.000');
+  it('nilai negatif tetep diformat sebagai angka absolut (tanda minus urusan caller)', () => {
+    expect(fmt(-15000)).toBe('Rp15.000');
   });
 
   it('nol tetep kebaca bener', () => {
