@@ -1,7 +1,8 @@
 'use client';
-import { createContext, useContext, useEffect, useState, useCallback } from 'react';
+import { createContext, useContext, useEffect, useState, useCallback, useRef } from 'react';
 import { getCategories, getAccounts, getTransactions } from '@/lib/queries';
 import { monthRange } from '@/lib/date';
+import { createClient } from '@/lib/supabase/client';
 import type { Category, Account, Transaction } from '@/lib/types';
 import TopBar from './TopBar';
 import BottomNav from './BottomNav';
@@ -34,9 +35,21 @@ export default function DashboardShell({ children }: { children: React.ReactNode
   const [error, setError] = useState<string | null>(null);
   const [monthDate, setMonthDate] = useState<Date>(new Date());
 
-  // Sheet nambah/edit transaksi — dulu state-nya ada tapi gak pernah dirender.
   const [sheetOpen, setSheetOpen] = useState(false);
   const [editingTx, setEditingTx] = useState<Transaction | null>(null);
+
+  // Race/skew antar-instance client udah dibenerin (singleton di lib/supabase/client.ts),
+  // tapi kalau error JWT/token TETEP kejadian (token beneran expired/invalid, bukan cuma
+  // race), retry pake token yang sama persis bakal gagal lagi terus — makanya sebelumnya
+  // user harus hard-refresh biar dapet token baru dari middleware. Sekarang loadData
+  // otomatis coba refresh session dulu sebelum retry; kalau itu juga gagal, baru paksa
+  // re-login bersih (bukan cuma nampilin error selamanya).
+  const retryingAfterRefresh = useRef(false);
+
+  function isAuthError(e: any): boolean {
+    const msg = (e?.message || '').toLowerCase();
+    return msg.includes('jwt') || msg.includes('token') || e?.status === 401 || e?.code === 'PGRST301';
+  }
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -51,8 +64,23 @@ export default function DashboardShell({ children }: { children: React.ReactNode
       setCategories(cats);
       setAccounts(accs);
       setTransactions(txs);
+      retryingAfterRefresh.current = false;
     } catch (e: any) {
       console.error('Error loading data:', e);
+
+      if (isAuthError(e) && !retryingAfterRefresh.current) {
+        retryingAfterRefresh.current = true;
+        const supabase = createClient();
+        const { data, error: refreshError } = await supabase.auth.refreshSession();
+        if (!refreshError && data.session) {
+          loadData();
+          return;
+        }
+        await supabase.auth.signOut();
+        window.location.href = '/login';
+        return;
+      }
+
       setError(e?.message || 'Gagal memuat data. Coba lagi.');
     } finally {
       setLoading(false);
