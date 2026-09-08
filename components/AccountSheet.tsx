@@ -218,11 +218,6 @@ export default function AccountSheet({
                 className="w-full border border-pink-100 bg-white/[0.04] text-white placeholder-gray-500 rounded-xl pl-10 pr-4 py-3 text-sm outline-none focus:border-pink-400"
               />
             </div>
-            {mode === 'edit' && (
-              <p className="text-[10px] text-gray-500 mt-1.5">
-                Masukin saldo yang beneran ada sekarang — sistem otomatis nyesuain di belakang layar, gak perlu itung tambah/kurang manual.
-              </p>
-            )}
           </div>
 
           {draft.type !== 'cash' && (
