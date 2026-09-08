@@ -14,7 +14,10 @@ type AccountDraft = {
   icon: string;
   ramp: string;
   type: 'cash' | 'savings' | 'debt';
-  opening_balance: number;
+  // Add mode: ini SALDO AWAL (belum ada transaksi, jadi sama aja dgn saldo saat ini).
+  // Edit mode: ini SALDO SEKARANG yang mau dituju — bukan saldo awal, biar user
+  // gak perlu itung mundur sendiri (tambah/kurang) buat nyocokin hasil akhir.
+  balanceInput: number;
   goal: number;
 };
 
@@ -29,7 +32,7 @@ const DEFAULT_DRAFT: AccountDraft = {
   icon: PICKABLE_ICONS[0],
   ramp: 'pink',
   type: 'cash',
-  opening_balance: 0,
+  balanceInput: 0,
   goal: 0,
 };
 
@@ -51,7 +54,7 @@ export default function AccountSheet({
           icon: account.icon,
           ramp: account.ramp,
           type: account.type,
-          opening_balance: account.opening_balance ?? 0,
+          balanceInput: account.balance,
           goal: account.goal,
         }
       : DEFAULT_DRAFT
@@ -73,7 +76,7 @@ export default function AccountSheet({
           icon: draft.icon,
           ramp: draft.ramp,
           type: draft.type,
-          opening_balance: draft.opening_balance,
+          opening_balance: draft.balanceInput,
           goal: draft.goal,
         });
       } else if (mode === 'edit' && account) {
@@ -85,7 +88,14 @@ export default function AccountSheet({
           type: draft.type,
           goal: draft.goal,
         }).eq('id', account.id);
-        await updateAccountOpeningBalance(account.id, draft.opening_balance);
+
+        // account.balance = opening_balance_lama + total_semua_transaksi.
+        // User masukin SALDO SEKARANG yang dia mau (draft.balanceInput), jadi
+        // opening_balance baru = target - total_semua_transaksi
+        //                       = target - (balance_lama - opening_balance_lama)
+        const totalTransaksi = account.balance - (account.opening_balance ?? 0);
+        const openingBalanceBaru = draft.balanceInput - totalTransaksi;
+        await updateAccountOpeningBalance(account.id, openingBalanceBaru);
       }
       onSaved();
     } catch (e: any) {
@@ -197,15 +207,22 @@ export default function AccountSheet({
           />
 
           <div className="mb-4">
-            <p className="text-[11px] text-gray-400 mb-1.5">Saldo Awal</p>
+            <p className="text-[11px] text-gray-400 mb-1.5">
+              {mode === 'add' ? 'Saldo Awal' : 'Saldo Saat Ini'}
+            </p>
             <div className="relative">
               <span className="absolute left-4 top-1/2 -translate-y-1/2 text-sm text-gray-400">Rp</span>
               <CurrencyInput
-                value={draft.opening_balance}
-                onChange={(v) => setDraft({ ...draft, opening_balance: v })}
+                value={draft.balanceInput}
+                onChange={(v) => setDraft({ ...draft, balanceInput: v })}
                 className="w-full border border-pink-100 bg-white/[0.04] text-white placeholder-gray-500 rounded-xl pl-10 pr-4 py-3 text-sm outline-none focus:border-pink-400"
               />
             </div>
+            {mode === 'edit' && (
+              <p className="text-[10px] text-gray-500 mt-1.5">
+                Masukin saldo yang beneran ada sekarang — sistem otomatis nyesuain di belakang layar, gak perlu itung tambah/kurang manual.
+              </p>
+            )}
           </div>
 
           {draft.type !== 'cash' && (
